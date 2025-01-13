@@ -1,34 +1,40 @@
 import { useEffect, useState } from "react";
 
 export default function Home() {
-
-  const [usuarios, setUsuarios] = useState([]);
+  const [dadosDeCelular, setDadosDeCelular] = useState([]);
 
   useEffect(() => {
-    const buscarUsuario = async () => {
+    const buscarDadosDeCelular = async () => {
       try {
         const resposta = await fetch("http://localhost:3000/usuarios");
         const dados = await resposta.json();
-        setUsuarios(dados);
+        setDadosDeCelular(dados);
       } catch {
-        alert('Ocorreu um erro no app!');
+        alert("Ocorreu um erro ao buscar os dados!");
       }
-    }
-    buscarUsuario();
-  }, [usuarios])
+    };
+    buscarDadosDeCelular();
+  }, []);  
 
   return (
-    <table>
-      <tr>
-        <td>Nome</td>
-        <td>E-mail</td>
-      </tr>
-      {usuarios.map((usuario) =>
-        <tr key={usuario.id}>
-          <td>{usuario.nome}</td>
-          <td>{usuario.email}</td>
+    <div>
+
+    <table className="tabela">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
         </tr>
-      )}
+      </thead>
+      <tbody>
+        {dadosDeCelular.map((usuario) => (
+          <tr key={usuario.id}>
+            <td>{usuario.nome}</td>
+            <td>{usuario.email}</td>
+          </tr>
+        ))}
+      </tbody>
     </table>
+    </div>
   );
 }

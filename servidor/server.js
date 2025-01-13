@@ -5,61 +5,77 @@ const cors = require('cors');
 app.use(express.json());
 app.use(cors());
 
-let usuarios = [];
+let DadosdeCelulares = [];
 
-app.post('/usuarios', (req, res) => {
-    const { nome, email } = req.body;
-    
-    if (!nome || !email) {
-        return res.status(400).json({ erro: 'Nome e email são obrigatórios' });
+app.post('/DadosdeCelulares', (req, res) => {
+    const { modelo, ano, gigas, desbloqueio, cor, valor, tamanho } = req.body;
+
+    if (!modelo || !ano || !gigas || !cor || !valor || !tamanho) {
+        return res.status(400).json({ erro: 'Todos os campos são obrigatórios' });
     }
 
-    const novoUsuario = { id: usuarios.length + 1, nome, email };
-    usuarios.push(novoUsuario);
-    
-    res.status(201).json(novoUsuario);
+    const novoCelular = {
+        id: DadosdeCelulares.length + 1,
+        modelo,
+        ano,
+        gigas,
+        desbloqueio,
+        cor,
+        valor,
+        tamanho,
+    };
+
+    DadosdeCelulares.push(novoCelular);
+    res.status(201).json(novoCelular);
 });
 
-app.get('/usuarios', (req, res) => {
-    res.status(200).json(usuarios);
+app.get('/DadosdeCelulares', (req, res) => {
+    res.status(200).json(DadosdeCelulares);
 });
 
-app.get('/usuarios/:id', (req, res) => {
+app.get('/DadosdeCelulares/:id', (req, res) => {
     const { id } = req.params;
-    const usuario = usuarios.find(u => u.id === parseInt(id));
-    
-    if (!usuario) {
-        return res.status(404).json({ erro: 'Usuário não encontrado' });
+    const celular = DadosdeCelulares.find(u => u.id === parseInt(id));
+
+    if (!celular) {
+        return res.status(404).json({ erro: 'Celular não encontrado' });
     }
-    
-    res.status(200).json(usuario);
+
+    res.status(200).json(celular);
 });
 
-app.put('/usuarios/:id', (req, res) => {
+app.put('/DadosdeCelulares/:id', (req, res) => {
     const { id } = req.params;
-    const { nome, email } = req.body;
-    
-    const usuario = usuarios.find(u => u.id === parseInt(id));
-    
-    if (!usuario) {
-        return res.status(404).json({ erro: 'Usuário não encontrado' });
+    const { modelo, ano, gigas, desbloqueio, cor, valor, tamanho } = req.body;
+
+    const celular = DadosdeCelulares.find(u => u.id === parseInt(id));
+
+    if (!celular) {
+        return res.status(404).json({ erro: 'Celular não encontrado' });
     }
-    
-    usuario.nome = nome || usuario.nome;
-    usuario.email = email || usuario.email;
-    
-    res.status(200).json(usuario);
+
+   
+    celular.modelo = modelo || celular.modelo;
+    celular.ano = ano || celular.ano;
+    celular.gigas = gigas || celular.gigas;
+    celular.desbloqueio = desbloqueio || celular.desbloqueio;
+    celular.cor = cor || celular.cor;
+    celular.valor = valor || celular.valor;
+    celular.tamanho = tamanho || celular.tamanho;
+
+    res.status(200).json(celular);
 });
 
-app.delete('/usuarios/:id', (req, res) => {
+
+app.delete('/DadosdeCelulares/:id', (req, res) => {
     const { id } = req.params;
-    const index = usuarios.findIndex(u => u.id === parseInt(id));
-    
+    const index = DadosdeCelulares.findIndex(u => u.id === parseInt(id));
+
     if (index === -1) {
-        return res.status(404).json({ erro: 'Usuário não encontrado' });
+        return res.status(404).json({ erro: 'Celular não encontrado' });
     }
-    
-    usuarios.splice(index, 1);
+
+    DadosdeCelulares.splice(index, 1);
     res.status(204).send();
 });
 

@@ -1,0 +1,35 @@
+
+
+.footer {
+    background-color: #4b0082;
+    color: #e6e6fa; 
+    text-align: center;
+    padding: 1.5rem 1rem;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+    text-transform: uppercase;
+  }
+  
+  .footer img {
+    height: 40px;
+    width: auto;
+    margin-top: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid #e6e6fa; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+  
+  .footer img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
