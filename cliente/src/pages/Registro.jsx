@@ -5,13 +5,13 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export default function Registrar() {
-  const [Nome, setNome] = useState('');
-  const [Email, setEmail] = useState('');
-  const [Idade, setIdade] = useState('');
-  const [Cpf, setCpf] = useState('');
-  const [Endereco, setEndereco] = useState('');
-  const [Pais, setPais] = useState('');
-  const [Idioma, setIdioma] = useState('');
+  const [modelo, setmodelo] = useState('');
+  const [gigas, setgigas] = useState('');
+  const [ano, setano] = useState('');
+  const [cor, setcor] = useState('');
+  const [tamanho, settamanho] = useState('');
+  const [desbloqueio, setdesbloqueio] = useState('');
+
 
   const navigate = useNavigate();
 
@@ -26,8 +26,9 @@ export default function Registrar() {
           ano: Ano,
           gigas: Gigas,
           cor: Cor,
-         valor: Valor,
-          tamanho:Tamanho,
+         valor: valor,
+          tamanho:tamanho,
+          desbloqueio:desbloqueio
         }),
       });
 

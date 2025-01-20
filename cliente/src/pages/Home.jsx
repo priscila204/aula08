@@ -19,7 +19,7 @@ export default function Home() {
 
     }
     buscarUsuario();
-  }, [usuarios])
+  [usuarios]
   const deletar = async (id) =>{
     try{
       await fetch('http://localhost:3000/usuarios/'+ id,{
@@ -37,31 +37,47 @@ export default function Home() {
     <table className="tabela">
       <thead>
         <tr>
-          <th>Nome</th>
-          <th>E-mail</th>
+          <th>modelo</th>
+          <th>ano</th>
+          <th>gigas</th>
+          <th>cor</th>
+          <th>tamanho</th>
+          <th>valor</th>
+          <th>desbloqueio</th>
+         </tr>
+          </thead>
+          </table>
 
-    <table>
-      <tr>
-        <td>Nome</td>
-        <td>E-mail</td>
-      </tr>
-      {usuarios.map((usuario) =>
+    {usuarios.map((usuario) =>
         <tr key={usuario.id}>
-          <td>{usuario.nome}</td>
-          <td>{usuario.email}</td>
+          <td>{usuario.modelo}</td>
+          <td>{usuario.ano}</td>
+          <td>{usuario.gigas}</td>
+          <td>{usuario.cor}</td>
+          <td>{usuario.valor}</td>
+          <td>{usuario.tamanho}</td>
+          <td>{usuario.desbloqueio}</td>
           <td><button onClick={()=>deletar (usuario.id) }>X</button></td>
+          </tr>
 
-        </tr>
-      </thead>
-      <tbody>
+    }
+      <thead>
+      
         {dadosDeCelular.map((usuario) => (
           <tr key={usuario.id}>
             <td>{usuario.nome}</td>
-            <td>{usuario.email}</td>
+            <td>{usuario.modelo}</td>
+            <td>{usuario.ano}</td>
+            <td>{usuario.gigas}</td>
+            <td>{usuario.cor}</td>
+            <td>{usuario.valor}</td>
+            <td>{usuario.tamanho}</td>
+            <td>{usuario.desbloqueio}</td>
           </tr>
+          </thead>
         ))}
-      </tbody>
+      
     </table>
     </div>
-  );
-}
+      )  );
+  
