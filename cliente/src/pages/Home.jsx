@@ -60,7 +60,7 @@ export default function Home() {
           <td><button onClick={()=>deletar (usuario.id) }>X</button></td>
           </tr>
 
-    }
+    )}
       <thead>
       
         {dadosDeCelular.map((usuario) => (
@@ -74,10 +74,10 @@ export default function Home() {
             <td>{usuario.tamanho}</td>
             <td>{usuario.desbloqueio}</td>
           </tr>
-          </thead>
+          
         ))}
-      
-    </table>
+      </thead>
+ 
     </div>
-      )  );
+     );
   

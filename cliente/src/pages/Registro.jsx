@@ -54,40 +54,36 @@ export default function Registrar() {
   );
 }
 
-    return(
-        <>
+return (
+  <div>
     <table>
-        <div className="todos">
-        <div className="primeiraPagina">
+      <thead>
         <tr>
-          <td className="border">tamanho</td>
+          <th className="border">Tamanho</th>
         </tr>
-        
-        {
-            usuarios.map((usuario) =>
-                <tr key={usuario.id}>
-            
-          <div className="dividir">
+      </thead>
+      <tbody>
+        {usuarios.map((usuario) => (
+          <tr key={usuario.id}>
             <td>{usuario.tamanho}</td>
-          </div>
           </tr>
-          )}
-          </div>
-          
-        <div className="segundapagina">
-  
-          <tr>
-          <td className="border">cor</td>
-        </tr>
-        {
-            gmail.map((gmail) =>
-                <tr key={cor.id}>
-              
-          <div className="separar">
-            <td>{cor.cor}</td>
-          </div>
-          </tr>
-        )})
-  
-          
+        ))}
+      </tbody>
+    </table>
 
+    <table>
+      <thead>
+        <tr>
+          <th className="border">Cor</th>
+        </tr>
+      </thead>
+      <tbody>
+        {gmail.map((item) => (
+          <tr key={item.id}>
+            <td>{item.cor}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);

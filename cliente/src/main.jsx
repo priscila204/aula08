@@ -5,7 +5,7 @@ import Home from './pages/Home'
 
 import Header from './components'
 import Footer from './components'
-
+import  ListaProdutos from './componets'
 import Registrar from './pages/Registro'
 
 createRoot(document.getElementById('root')).render(
@@ -16,8 +16,7 @@ createRoot(document.getElementById('root')).render(
 
             <Route path="/home" element={<Home/>}/>
             <Route path="/" element={<Registrar/>}/>
-
-            <Route path="/" element={<Home/>}/>
+            <Route path="/produtos" element={<ListaProdutos/>}/>
             <Route path="/Registrar" element = {<Registrar/>}/>
 
        </Routes>
