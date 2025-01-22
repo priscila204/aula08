@@ -1,103 +1,185 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-import styles from '../styles/Form.module.css';
+import styles from '../styles/Alterar.module.css';
 
-import { useNavigate } from "react-router-dom";
-
-export default function Formulario() {
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const isEdit = !!id;
-  const [dados, setDados] = useState({
+export default function Alterar() {
+  const [produtos, setProdutos] = useState([]);
+  const [produtoEditando, setProdutoEditando] = useState(null); // Produto sendo editado
+  const [formData, setFormData] = useState({
     modelo: '',
     ano: '',
     gigas: '',
     desbloqueio: '',
     cor: '',
     valor: '',
-    tamanho: ''
+    tamanho: '',
   });
-  const [showPassword, setShowPassword] = useState(false);
 
+  // Busca produtos cadastrados
   useEffect(() => {
-    if (isEdit) {
-      const buscaDados = async () => {
-        try {
-          const resposta = await fetch(`http://localhost:3001/dadosdecelular/${id}`);
-          const dados = await resposta.json();
-          setDados(dados);
-        } catch (err) {
-          console.error('Ocorreu um erro no app:', err);
-          alert('Ocorreu um erro no app!');
-        }
-      };
-      buscaDados();
-    }
-  }, [id, isEdit]);
+    const buscarProdutos = async () => {
+      try {
+        const resposta = await fetch("http://localhost:3000/dadosdecelulares");
+        if (!resposta.ok) throw new Error("Erro ao buscar os produtos!");
+        const dados = await resposta.json();
+        setProdutos(dados);
+      } catch (err) {
+        console.error("Erro ao buscar os produtos:", err);
+        alert("Ocorreu um erro ao carregar os produtos.");
+      }
+    };
+    buscarProdutos();
+  }, []);
 
-  const handleSubmit = async (event) => {
+  // Atualiza os dados de um produto
+  const salvarAlteracoes = async (event) => {
     event.preventDefault();
     try {
-      const url = isEdit ? `http://localhost:3000/dadosdecelulares/${id}` : 'http://localhost:3000/dadosdecelulares';
-      const method = isEdit ? 'PUT' : 'POST';
-      const resposta = await fetch(url, {
-        method,
+      const resposta = await fetch(`http://localhost:3000/dadosdecelulares/${produtoEditando.id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dados)
+        body: JSON.stringify(formData),
       });
+
       if (resposta.ok) {
-        navigate('/Home');  
+        alert("Produto atualizado com sucesso!");
+        // Atualiza a lista de produtos
+        const produtosAtualizados = produtos.map((produto) =>
+          produto.id === produtoEditando.id ? { ...produtoEditando, ...formData } : produto
+        );
+        setProdutos(produtosAtualizados);
+        setProdutoEditando(null); // Limpa o formulário
+        setFormData({
+          modelo: '',
+          ano: '',
+          gigas: '',
+          desbloqueio: '',
+          cor: '',
+          valor: '',
+          tamanho: '',
+        });
       } else {
-        const errorData = await resposta.json();
-        alert('Ocorreu um erro na aplicação: ' + errorData.message);
+        alert("Erro ao atualizar o produto.");
       }
     } catch (err) {
-      alert('Ocorreu um erro de rede na aplicação');
+      console.error("Erro ao salvar alterações:", err);
+      alert("Ocorreu um erro ao salvar as alterações.");
     }
   };
 
+  // Lida com mudanças no formulário de edição
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setDados({ ...dados, [name]: value });
+    setFormData({ ...formData, [name]: value });
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
+  // Preenche o formulário com os dados do produto para edição
+  const editarProduto = (produto) => {
+    setProdutoEditando(produto);
+    setFormData(produto);
   };
 
   return (
     <div>
-      <main className={styles.main}>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <input type="text" name="modelo" value={dados.modelo} placeholder="Modelo" onChange={handleChange} />
-          <input type="date" name="ano" value={dados.ano} placeholder="Ano" onChange={handleChange} />
-          <input type="number" name="gigas" value={dados.gigas} placeholder="Gigas" onChange={handleChange} />
+      <h1>Listar e Alterar Produtos</h1>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Modelo</th>
+            <th>Ano</th>
+            <th>Gigas</th>
+            <th>Cor</th>
+            <th>Valor</th>
+            <th>Tamanho</th>
+            <th>Desbloqueio</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {produtos.map((produto) => (
+            <tr key={produto.id}>
+              <td>{produto.modelo}</td>
+              <td>{produto.ano}</td>
+              <td>{produto.gigas}</td>
+              <td>{produto.cor}</td>
+              <td>{produto.valor}</td>
+              <td>{produto.tamanho}</td>
+              <td>{produto.desbloqueio}</td>
+              <td>
+                <button onClick={() => editarProduto(produto)}>Alterar</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-          <div className={styles["password-container"]}>
+      {produtoEditando && (
+        <div className={styles.formContainer}>
+          <h2>Editando Produto: {produtoEditando.modelo}</h2>
+          <form onSubmit={salvarAlteracoes} className={styles.form}>
             <input
-              type={showPassword ? "text" : "password"}
-              name="desbloqueio"
-              value={dados.desbloqueio}
-              placeholder="Coloque sua senha: "
+              type="text"
+              name="modelo"
+              value={formData.modelo}
+              placeholder="Modelo"
               onChange={handleChange}
+              required
             />
-            <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className={styles["toggle-password"]}
-            >
-              {showPassword ? "Ocultar" : "Mostrar"}
+            <input
+              type="date"
+              name="ano"
+              value={formData.ano}
+              placeholder="Ano"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="number"
+              name="gigas"
+              value={formData.gigas}
+              placeholder="Gigas"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="text"
+              name="cor"
+              value={formData.cor}
+              placeholder="Cor"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="number"
+              name="valor"
+              value={formData.valor}
+              placeholder="Valor"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="number"
+              name="tamanho"
+              value={formData.tamanho}
+              placeholder="Tamanho"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="text"
+              name="desbloqueio"
+              value={formData.desbloqueio}
+              placeholder="Desbloqueio"
+              onChange={handleChange}
+              required
+            />
+            <button type="submit">Salvar Alterações</button>
+            <button type="button" onClick={() => setProdutoEditando(null)}>
+              Cancelar
             </button>
-          </div>
-
-          <input type="text" name="cor" value={dados.cor} placeholder="Cor" onChange={handleChange} />
-          <input type="number" name="valor" value={dados.valor} placeholder="Valor" onChange={handleChange} />
-          <input type="number" name="tamanho" value={dados.tamanho} placeholder="Tamanho" onChange={handleChange} />
-
-          <button type="submit">Salvar Alterações</button>
-        </form>
-      </main>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

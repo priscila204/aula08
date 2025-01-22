@@ -6,78 +6,66 @@ export default function Home() {
   useEffect(() => {
     const buscarDadosDeCelular = async () => {
       try {
-        const resposta = await fetch("http://localhost:3000/usuarios");
+        const resposta = await fetch("http://localhost:3000/DadosdeCelulares");
         const dados = await resposta.json();
         setDadosDeCelular(dados);
       } catch {
         alert("Ocorreu um erro ao buscar os dados!");
       }
-
     };
     buscarDadosDeCelular();
-  }, []);  
+  }, []);
 
-    }
-    buscarUsuario();
-  [usuarios]
-  const deletar = async (id) =>{
-    try{
-      await fetch('http://localhost:3000/usuarios/'+ id,{
-        method:'DELETE'
+  const deletar = async (id) => {
+    try {
+      const resposta = await fetch(`http://localhost:3000/DadosdeCelulares/${id}`, {
+        method: "DELETE",
       });
-    }catch{
-      alert("vish maria... Deu errado em");
+
+      if (resposta.ok) {
+        setDadosDeCelular((prevDados) => prevDados.filter((item) => item.id !== id));
+        alert("Registro deletado com sucesso!");
+      } else {
+        alert("Erro ao deletar o registro.");
+      }
+    } catch {
+      alert("Ocorreu um erro ao deletar o registro.");
     }
+  };
 
-  }
   return (
-
     <div>
-
-    <table className="tabela">
-      <thead>
-        <tr>
-          <th>modelo</th>
-          <th>ano</th>
-          <th>gigas</th>
-          <th>cor</th>
-          <th>tamanho</th>
-          <th>valor</th>
-          <th>desbloqueio</th>
-         </tr>
-          </thead>
-          </table>
-
-    {usuarios.map((usuario) =>
-        <tr key={usuario.id}>
-          <td>{usuario.modelo}</td>
-          <td>{usuario.ano}</td>
-          <td>{usuario.gigas}</td>
-          <td>{usuario.cor}</td>
-          <td>{usuario.valor}</td>
-          <td>{usuario.tamanho}</td>
-          <td>{usuario.desbloqueio}</td>
-          <td><button onClick={()=>deletar (usuario.id) }>X</button></td>
+      <h1>Lista de Celulares</h1>
+      <table className="tabela">
+        <thead>
+          <tr>
+            <th>Modelo</th>
+            <th>Ano</th>
+            <th>Gigas</th>
+            <th>Cor</th>
+            <th>Tamanho</th>
+            <th>Valor</th>
+            <th>Desbloqueio</th>
+            <th>Ações</th>
           </tr>
-
-    )}
-      <thead>
-      
-        {dadosDeCelular.map((usuario) => (
-          <tr key={usuario.id}>
-            <td>{usuario.nome}</td>
-            <td>{usuario.modelo}</td>
-            <td>{usuario.ano}</td>
-            <td>{usuario.gigas}</td>
-            <td>{usuario.cor}</td>
-            <td>{usuario.valor}</td>
-            <td>{usuario.tamanho}</td>
-            <td>{usuario.desbloqueio}</td>
-          </tr>
-          
-        ))}
-      </thead>
- 
+        </thead>
+        <tbody>
+          {dadosDeCelular.map((usuario) => (
+            <tr key={usuario.id}>
+              <td>{usuario.modelo}</td>
+              <td>{usuario.ano}</td>
+              <td>{usuario.gigas}</td>
+              <td>{usuario.cor}</td>
+              <td>{usuario.tamanho}</td>
+              <td>{usuario.valor}</td>
+              <td>{usuario.desbloqueio}</td>
+              <td>
+                <button onClick={() => deletar(usuario.id)}>Excluir</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-     );
-  
+  );
+}
